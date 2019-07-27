@@ -22,3 +22,5 @@ Route::get('country/{id}', 'Api\CountryController@show');
 Route::post('country', 'Api\CountryController@store');
 Route::put('country/{id}', 'Api\CountryController@update');
 Route::delete('country/{id}', 'Api\CountryController@destroy');
+
+Route::apiResource('go', 'Api\Go');
