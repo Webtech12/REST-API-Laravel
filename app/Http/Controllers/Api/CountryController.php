@@ -81,8 +81,11 @@ class CountryController extends Controller
         // $val = new CountryModel($id);
         // $fill = CountryModel::update($request->all());
         $val = CountryModel::find($id);
-        $val->update($request->all());
-        return response()->json($val, 200);
+        $retVal = (is_null($val)) ? 
+        'Not found' : $val->update($request->all()) ;
+        // $val->update($request->all());
+        
+        return response()->json($retVal, 200);;
     }
 
     /**
@@ -95,6 +98,9 @@ class CountryController extends Controller
     {
         //
         $val = CountryModel::find($id);
+        if (is_null($val)) {
+            return response()->json('Not found', 404);
+        }
         $val->delete();
         return response()->json(null, 204);
     }
