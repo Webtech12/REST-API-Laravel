@@ -108,8 +108,7 @@ class Go extends Controller
         //
         $val = CountryModel::find($id);
         if (is_null($val)) {
-            return response()->json(["message" => "Not found",
-             "status" => 404]);
+            return response()->json(["message" => "Not found"],404);
         }
         $val->delete();
         return response()->json(null, 204);

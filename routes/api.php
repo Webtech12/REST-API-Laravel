@@ -23,4 +23,6 @@ Route::post('country', 'Api\CountryController@store');
 Route::put('country/{id}', 'Api\CountryController@update');
 Route::delete('country/{id}', 'Api\CountryController@destroy');
 
-Route::apiResource('go', 'Api\Go');
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::apiResource('go', 'Api\Go');
+});
