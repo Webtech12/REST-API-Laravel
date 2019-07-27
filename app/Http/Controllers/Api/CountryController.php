@@ -72,11 +72,12 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CountryModel $val)
+    public function update(Request $request, $id)
     {
         //
         // $val = new CountryModel($id);
         // $fill = CountryModel::update($request->all());
+        $val = CountryModel::find($id);
         $val->update($request->all());
         return response()->json($val, 200);
     }
