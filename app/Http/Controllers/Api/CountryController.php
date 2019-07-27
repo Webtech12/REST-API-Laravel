@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Validator;
 use App\CountryModel;
 
 class CountryController extends Controller
@@ -38,8 +39,17 @@ class CountryController extends Controller
     public function store(Request $request)
     {
         //
-        $fill = CountryModel::create($request->all());
-        return response()->json($fill, 201);
+        $rules = [
+            "iso" => "required|min:2"
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        $retVal = ($validator->fails()) ?
+         response()->json($validator->errors(), 400) :
+         [$fill = CountryModel::create($request->all()),
+         response()->json($fill, 201)];
+
+        // $fill = CountryModel::create($request->all());
+        return $retVal;
     }
 
     /**
@@ -53,7 +63,8 @@ class CountryController extends Controller
         //
         $country = CountryModel::find($id);
         $retCountry = (is_null($country)) ? 
-        'Record not found' : response()->json($country, 200) ;
+        ["message" => "Record not found", "status" => 404] :
+         response()->json($country, 200) ;
         return $retCountry;
     }
 
@@ -82,10 +93,11 @@ class CountryController extends Controller
         // $fill = CountryModel::update($request->all());
         $val = CountryModel::find($id);
         $retVal = (is_null($val)) ? 
-        'Not found' : $val->update($request->all()) ;
-        // $val->update($request->all());
+        ["message" => "Not found", "status" => 404] :
+        $val->update($request->all());
         
-        return response()->json($retVal, 200);;
+        
+        return response()->json($retVal, 200);
     }
 
     /**
@@ -99,7 +111,8 @@ class CountryController extends Controller
         //
         $val = CountryModel::find($id);
         if (is_null($val)) {
-            return response()->json('Not found', 404);
+            return response()->json(["message" => "Not found",
+             "status" => 404]);
         }
         $val->delete();
         return response()->json(null, 204);
