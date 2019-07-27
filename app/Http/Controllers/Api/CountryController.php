@@ -51,7 +51,10 @@ class CountryController extends Controller
     public function show($id)
     {
         //
-        return response()->json(CountryModel::find($id), 200);
+        $country = CountryModel::find($id);
+        $retCountry = (is_null($country)) ? 
+        'Record not found' : response()->json($country, 200) ;
+        return $retCountry;
     }
 
     /**
@@ -88,10 +91,11 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CountryModel $id)
+    public function destroy($id)
     {
         //
-        $id->delete();
+        $val = CountryModel::find($id);
+        $val->delete();
         return response()->json(null, 204);
     }
 }
